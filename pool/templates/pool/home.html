@@ -1,0 +1,68 @@
+{% extends "pool/base.html" %}
+
+{% block content %}
+    <div id="standings">
+        <h2>Current Standings</h2>
+        <p>Calculated according to the <a href="https://en.wikipedia.org/wiki/TrueSkill">TrueSkill</a> ranking algorithm</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Rating</th>
+                    <th>Sigma</th>
+                    <th>Won</th>
+                    <th>Lost</th>
+                    <th>Played</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for player in players %}
+                    <tr>
+                        <td>{{  forloop.counter }}</td>
+                        <td><a href="{% url "player" player.id %}">{{ player.name }}</a></td>
+                        <td>{{ player.mu|floatformat }}</td>
+                        <td>{{ player.sigma|floatformat }}</td>
+                        <td>{{ player.games_won.count }}</td>
+                        <td>{{ player.games_lost.count }}</td>
+                        <td>{{ player.games_played }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h2>Add Game</h2>
+    <form method="post" action="/">
+        {%  if game_form.non_field_errors %}
+            <div class="error">
+                {{ game_form.non_field_errors }}
+            </div>
+        {%  endif %}
+        <div class="field">
+            {%  if game_form.winner.errors %}<div class="error">{{ game_form.winner.errors }}</div>{% endif %}
+            <label>{{ game_form.winner.label }}: {{ game_form.winner }}</label>
+        </div>
+
+        <div class="field">
+            {%  if game_form.loser.errors %}<div class="error">{{ game_form.loser.errors }}</div>{% endif %}
+            <label>{{ game_form.loser.label }}: {{ game_form.loser }}</label>
+        </div>
+
+        <input type="submit" name="game" value="Add">
+    </form>
+
+    <h2>Add Player</h2>
+    <form method="post" action="/">
+
+        <div class="field">
+            {%  if player_form.name.errors %}<div class="error">{{ player_form.name.errors }}</div>{% endif %}
+            <label>{{ player_form.name.label }}: {{ player_form.name }}</label>
+        </div>
+
+        <input type="submit" name="player" value="Add">
+
+    </form>
+
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "pool/base.html" %}
+
+{% block content %}
+    <div id="player">
+        <h2>{{  player.name }}</h2>
+        <table>
+            <tr>
+                <th>#</th>
+            </tr>
+            <tr>
+                <th>Rating</th>
+                <td>{{ player.mu|floatformat }}</td>
+            </tr>
+            <tr>
+                <th>Sigma</th>
+                <td>{{ player.sigma|floatformat }}</td>
+            </tr>
+            <tr>
+                <th>Won</th>
+                <td>{{ player.games_won.count }}</td>
+            </tr>
+            <tr>
+                <th>Lost</th>
+                <td>{{ player.games_lost.count }}</td>
+            </tr>
+            <tr>
+                <th>Played</th>
+                <td>{{ player.games_played }}</td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}

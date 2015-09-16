@@ -1,0 +1,97 @@
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+h2 {
+    font-size: 160%;
+    margin-bottom: 0.5em;
+    margin-top: 1em;
+}
+
+.container {
+    clear: left;
+    margin: 0 auto;
+    width: 1000px;
+}
+
+#header, #footer {
+    background: darkgreen;
+    color: white;
+}
+
+#header .container {
+    background: url("/static/media/img/ball.png") no-repeat 0 50%;
+    background-size: 5%;
+    padding: 20px 0;
+}
+
+#header a {
+    color: white;
+    text-decoration: none;
+}
+
+#header #title {
+    padding-left: 70px;
+    font-size: 200%;
+}
+#main {
+    position: relative;
+    overflow: hidden;
+    background-image: url('/static/media/img/background.jpg');
+    background-repeat: no-repeat;
+    background-position: 50% 0;
+    -ms-background-size: cover;
+    -o-background-size: cover;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    background-size: cover;
+}
+
+#main .container {
+    background: rgba(255, 255, 255, 0.3);
+    padding: 1em 1em 2em;
+    width: 980px;
+}
+
+#footer {
+    padding: 1em;
+    text-align: center;
+}
+
+.error {
+    color: crimson;
+    font-weight: bold;
+}
+
+.field {
+    margin: 0.5em 0;
+}
+
+th {
+    text-align: left;
+    color: white;
+    background: darkseagreen;
+    font-weight: bold;
+}
+
+table td, table th {
+    padding: 0.5em;
+}
+
+table {
+    background: rgba(255, 255, 255, 0.5);
+    width: 100%
+}
+
+#standings table {
+    margin-top: 1em;
+}
+
+#player table {
+    width: 30%;
+}
+
+
+#player table th {
+    width: 35%;
+}
