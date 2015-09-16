@@ -1,4 +1,5 @@
 from django.http import HttpResponseRedirect
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from pool.forms import PlayerForm, GameForm
 from pool.models import Game, Player
@@ -25,10 +26,8 @@ def home(request):
                 )
                 return HttpResponseRedirect('/')
 
-    players = Player.objects.order_by('-mu')
-
     return render(request, 'pool/home.html', {
-        'players': players,
+        'players': Player.objects.all(),
         'player_form': player_form,
         'game_form': game_form,
     })
@@ -37,5 +36,8 @@ def home(request):
 def player(request, id):
     player = get_object_or_404(Player, pk=id)
     return render(request, 'pool/player.html', {
-        'player': player
+        'player': player,
+        'games': Game.objects.filter(
+            Q(winner=player) | Q(loser=player)
+        ).order_by('created')
     })

@@ -6,6 +6,7 @@
         <table>
             <tr>
                 <th>#</th>
+                <td>{{ player.ranking }}</td>
             </tr>
             <tr>
                 <th>Rating</th>
@@ -27,6 +28,38 @@
                 <th>Played</th>
                 <td>{{ player.games_played }}</td>
             </tr>
+        </table>
+    </div>
+
+    <div id="games">
+        <h2>Games</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Against</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for game in games %}
+                    {% if game.winner == player %}
+                        <tr class="winner">
+                            <td>{{ game.created }}</td>
+                            <td>{{ game.loser }}</td>
+                            <td>Won</td>
+                        </tr>
+                    {% else %}
+                        <tr class="loser">
+                            <td>{{ game.created }}</td>
+                            <td>{{ game.winner }}</td>
+                            <td>Lost</td>
+                        </tr>
+                    {% endif %}
+
+                    </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </div>
 {% endblock %}

@@ -8,7 +8,7 @@ class PlayerManager(models.Manager):
         query = super(PlayerManager, self).get_queryset()
         return query.annotate(
             games_played=Count('games_won', distinct=True) + Count('games_lost', distinct=True)
-        )
+        ).order_by('-mu', '-games_played')
 
 
 class Player(models.Model):
@@ -17,6 +17,10 @@ class Player(models.Model):
     sigma = models.FloatField(null=True)
 
     objects = PlayerManager()
+
+    @property
+    def ranking(self):
+        return Player.objects.filter(mu__gt=self.mu).count() + 1
 
     @property
     def rating(self):#
