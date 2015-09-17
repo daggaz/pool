@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Count
 from django.db.models.expressions import RawSQL
 from trueskill import Rating, rate_1vs1
@@ -56,7 +56,7 @@ class Player(models.Model):
         return Player.objects.count()
 
     @property
-    def rating(self):#
+    def rating(self):
         return Rating(self.mu, self.sigma)
 
     @rating.setter
@@ -73,10 +73,43 @@ class Game(models.Model):
     winner = models.ForeignKey(Player, related_name='games_won')
     loser = models.ForeignKey(Player, related_name='games_lost')
 
-    def save(self, *args, **kwargs):
-        super(Game, self).save(*args, **kwargs)
+    def create_rankings(self):
         winner = self.winner
         loser = self.loser
         winner.rating, loser.rating = rate_1vs1(winner.rating, loser.rating)
-        winner.save()
-        loser.save()
+        winner_ranking = Ranking(player=winner, game=self)
+        winner_ranking.rating = winner.rating
+        loser_ranking = Ranking(player=loser, game=self)
+        loser_ranking.rating = loser.rating
+        with transaction.atomic():
+            winner.save()
+            loser.save()
+            winner_ranking.save()
+            loser_ranking.save()
+
+    def save(self, *args, **kwargs):
+        super(Game, self).save(*args, **kwargs)
+        if self.pk is None:
+            self.create_rankings()
+
+    class Meta(object):
+        ordering = ('created',)
+
+
+class Ranking(models.Model):
+    player = models.ForeignKey(Player, related_name='rankings')
+    game = models.ForeignKey(Game, related_name='rankings')
+    mu = models.FloatField(null=True)
+    sigma = models.FloatField(null=True)
+
+    @property
+    def rating(self):
+        return Rating(self.mu, self.sigma)
+
+    @rating.setter
+    def rating(self, rating):
+        self.mu = rating.mu
+        self.sigma = rating.sigma
+
+    class Meta(object):
+        ordering = ('game__created',)

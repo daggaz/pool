@@ -1,9 +1,56 @@
 {% extends "pool/base.html" %}
 
+{% block extra_head %}
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawChart);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('datetime', 'Time');
+        data.addColumn('number', 'Rating');
+        data.addColumn({type: 'string', role: 'tooltip'});
+        data.addRows([
+            {% for ranking in player.rankings.all %}
+                {%  with ranking.game.created as date %}
+                    [
+                        new Date({{ date.year }}, {{ date.month }}-1, {{ date.day }}, {{ date.hour }}, {{ date.minute }}, {{ date.second }}),
+                        {{ ranking.mu }},
+                        {% if player == ranking.game.winner %}
+                            "Won against {{ ranking.game.loser.name }}"
+                        {% else %}
+                            "Lost against {{ ranking.game.winner.name }}"
+                        {% endif %}
+                    ],
+                {% endwith %}
+            {% endfor %}
+        ]);
+
+        // Set chart options
+        var options = {'title':'Rating',
+                       'height':document.getElementById('player_details').clientHeight};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.LineChart(document.getElementById('rankings_chart'));
+        chart.draw(data, options);
+      }
+    </script>
+{% endblock %}
+
 {% block content %}
     <div id="player">
         <h2>{{  player.name }}</h2>
-        <table>
+        <table id="player_details">
             <tr>
                 <th>#</th>
                 <td>{{ player.ranking }}</td>
@@ -29,6 +76,8 @@
                 <td>{{ player.games_played }}</td>
             </tr>
         </table>
+
+        <div id="rankings_chart"></div>
     </div>
 
     <div id="games">

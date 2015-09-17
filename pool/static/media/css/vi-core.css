@@ -112,10 +112,20 @@ td a:hover {
     margin-top: 1em;
 }
 
-#player table {
+#player_details {
+    float: left;
     width: 30%;
 }
+#games {
+    clear: both;
+    padding-top: 1px;
+}
 
+#rankings_chart {
+    float: right;
+    height: 192px;
+    width: 68%;
+}
 
 #player table th {
     width: 35%;
