@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Count
+from django.db.models.expressions import RawSQL
 from trueskill import Rating, rate_1vs1
 
 
@@ -9,6 +10,36 @@ class PlayerManager(models.Manager):
         return query.annotate(
             games_played=Count('games_won', distinct=True) + Count('games_lost', distinct=True)
         ).order_by('-mu', '-games_played')
+
+    def annotate_against(self, other):
+        return self.annotate(
+            games_won_against=RawSQL(
+                """
+                    SELECT COUNT(*)
+                    FROM pool_game
+                    WHERE loser_id = %s AND winner_id = pool_player.id
+                """,
+                (other.id,)
+            ),
+            games_lost_against=RawSQL(
+                """
+                    SELECT COUNT(*)
+                    FROM pool_game
+                    WHERE winner_id = %s AND loser_id = pool_player.id
+                """,
+                (other.id,)
+            ),
+            games_played=RawSQL(
+                """
+                    SELECT COUNT(*)
+                    FROM pool_game
+                    WHERE
+                      loser_id = %s AND winner_id = pool_player.id OR
+                      winner_id = %s AND loser_id = pool_player.id
+                """,
+                (other.id, other.id,)
+            )
+        )
 
 
 class Player(models.Model):
@@ -20,7 +51,9 @@ class Player(models.Model):
 
     @property
     def ranking(self):
-        return Player.objects.filter(mu__gt=self.mu).count() + 1
+        if self.mu:
+            return Player.objects.filter(mu__gt=self.mu).count() + 1
+        return Player.objects.count()
 
     @property
     def rating(self):#

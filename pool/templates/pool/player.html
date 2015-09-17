@@ -62,4 +62,29 @@
             </tbody>
         </table>
     </div>
+
+    <div id="matches">
+        <h2>Matches</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Games</th>
+                    <th>Wins</th>
+                    <th>Losses</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for other in others %}
+                    <tr>
+                        <td><a href="{% url "player" other.pk %}">{{ other.name }}</a></td>
+                        <td>{{ other.games_played }}</td>
+                        <td>{{ other.games_lost_against }}</td>
+                        <td>{{ other.games_won_against }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
 {% endblock %}

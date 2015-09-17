@@ -33,36 +33,65 @@
         </table>
     </div>
 
-    <h2>Add Game</h2>
-    <form method="post" action="/">
-        {%  if game_form.non_field_errors %}
-            <div class="error">
-                {{ game_form.non_field_errors }}
+    <div id="side_bar">
+        <h2>Add Game</h2>
+        <form method="post" action="/">
+            {%  if game_form.non_field_errors %}
+                <div class="error">
+                    {{ game_form.non_field_errors }}
+                </div>
+            {%  endif %}
+            <div class="field">
+                {%  if game_form.winner.errors %}<div class="error">{{ game_form.winner.errors }}</div>{% endif %}
+                <label>{{ game_form.winner.label }}: {{ game_form.winner }}</label>
             </div>
-        {%  endif %}
-        <div class="field">
-            {%  if game_form.winner.errors %}<div class="error">{{ game_form.winner.errors }}</div>{% endif %}
-            <label>{{ game_form.winner.label }}: {{ game_form.winner }}</label>
-        </div>
 
-        <div class="field">
-            {%  if game_form.loser.errors %}<div class="error">{{ game_form.loser.errors }}</div>{% endif %}
-            <label>{{ game_form.loser.label }}: {{ game_form.loser }}</label>
-        </div>
+            <div class="field">
+                {%  if game_form.loser.errors %}<div class="error">{{ game_form.loser.errors }}</div>{% endif %}
+                <label>{{ game_form.loser.label }}: {{ game_form.loser }}</label>
+            </div>
 
-        <input type="submit" name="game" value="Add">
-    </form>
+            <input type="submit" name="game" value="Add">
+        </form>
 
-    <h2>Add Player</h2>
-    <form method="post" action="/">
+        <h2>Add Player</h2>
+        <form method="post" action="/">
 
-        <div class="field">
-            {%  if player_form.name.errors %}<div class="error">{{ player_form.name.errors }}</div>{% endif %}
-            <label>{{ player_form.name.label }}: {{ player_form.name }}</label>
-        </div>
+            <div class="field">
+                {%  if player_form.name.errors %}<div class="error">{{ player_form.name.errors }}</div>{% endif %}
+                <label>{{ player_form.name.label }}: {{ player_form.name }}</label>
+            </div>
 
-        <input type="submit" name="player" value="Add">
+            <input type="submit" name="player" value="Add">
 
-    </form>
+        </form>
+    </div>
+
+    <div id="matrix">
+        <h2>Player Matrix</h2>
+        <table>
+            <tr>
+                <th class="corner"></th>
+                {% for player in players %}
+                    <th><a href="{% url "player" player.pk %}">{{ player.name }}</a></th>
+                {% endfor %}
+            </tr>
+
+            {% for row in matrix %}
+                <tr>
+                    <th><a href="{% url "player" row.0.pk %}">{{ row.0.name }}</a></th>
+                    {% for item in row.1 %}
+                        {% if item != row.0 %}
+                            <td class="not_blank" title="{{ row.0.name }} has won {{ item.games_lost_against }} game{{ item.games_lost_against|pluralize }} and lost {{ item.games_won_against }} game{{ item.games_won_against|pluralize }} against {{ item.name }}">
+                                <span style="color: green;">{{ item.games_lost_against }}</span>/<span style="color: darkred">{{ item.games_won_against }}</span>
+                            </td>
+                        {% else %}
+                            <td class="blank"></td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 
 {% endblock %}

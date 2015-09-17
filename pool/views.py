@@ -1,5 +1,6 @@
+from django.db.models.expressions import RawSQL
 from django.http import HttpResponseRedirect
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.shortcuts import render, get_object_or_404
 from pool.forms import PlayerForm, GameForm
 from pool.models import Game, Player
@@ -26,18 +27,29 @@ def home(request):
                 )
                 return HttpResponseRedirect('/')
 
+    players = Player.objects.all()
+    matrix = []
+    for player in players:
+        matrix.append((
+            player,
+            Player.objects.annotate_against(player),
+        ))
+
     return render(request, 'pool/home.html', {
-        'players': Player.objects.all(),
+        'players': players,
         'player_form': player_form,
         'game_form': game_form,
+        'matrix': matrix,
     })
 
 
 def player(request, id):
     player = get_object_or_404(Player, pk=id)
+    others = Player.objects.annotate_against(player).exclude(pk=player.pk)
     return render(request, 'pool/player.html', {
         'player': player,
         'games': Game.objects.filter(
             Q(winner=player) | Q(loser=player)
-        ).order_by('created')
+        ).order_by('created'),
+        'others': others,
     })

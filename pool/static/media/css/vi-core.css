@@ -73,6 +73,14 @@ th {
     background: darkseagreen;
     font-weight: bold;
 }
+th a {
+    color: white;
+    text-decoration: none;
+}
+
+th a:hover {
+    text-decoration: underline;
+}
 
 table td, table th {
     padding: 0.5em;
@@ -81,6 +89,23 @@ table td, table th {
 table {
     background: rgba(255, 255, 255, 0.5);
     width: 100%
+}
+
+
+td a {
+    color: inherit;
+    text-decoration: none;
+}
+
+td a:hover {
+    text-decoration: underline;
+}
+
+#standings {
+    float: left;
+    width: 650px;
+    padding-right: 30px;
+
 }
 
 #standings table {
@@ -94,4 +119,25 @@ table {
 
 #player table th {
     width: 35%;
+}
+
+#side_bar {
+    float: left;
+    width: 260px;
+}
+
+#matrix {
+    clear: left;
+}
+
+#matrix table .blank {
+    background: rgba(150, 150, 150, 0.2);
+}
+
+#matrix table .corner {
+    background-image: url('/static/media/img/vs.png');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: 50%;
+
 }
