@@ -88,8 +88,9 @@ class Game(models.Model):
             loser_ranking.save()
 
     def save(self, *args, **kwargs):
+        created = self.pk is None
         super(Game, self).save(*args, **kwargs)
-        if self.pk is None:
+        if created:
             self.create_rankings()
 
     class Meta(object):

@@ -138,6 +138,7 @@ td a:hover {
 
 #matrix {
     clear: left;
+    padding-top: 1px;
 }
 
 #matrix table .blank {
