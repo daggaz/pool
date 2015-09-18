@@ -92,7 +92,18 @@
                     curveType:'function',
                     title:'Ratings',
                     intervals: { 'style':'area' },
-                    height: 300,
+                    chartArea: {
+                        left: '5%',
+                        width: '80%',
+                        height: '80%'
+                    },
+                    vAxis: {
+                        baseline: 25,
+                    },
+                    hAxis: {
+                        title: 'Date'
+                    },
+                    height: 500,
                     interpolateNulls: true,
                     explorer: {keepInBounds: true, axis: 'horizontal'},
                 }
