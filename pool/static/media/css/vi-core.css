@@ -91,6 +91,9 @@ table {
     width: 100%
 }
 
+.chart {
+    background: rgba(255, 255, 255, 0.5);
+}
 
 td a {
     color: inherit;
@@ -121,7 +124,7 @@ td a:hover {
     padding-top: 1px;
 }
 
-#rankings_chart {
+#player #rankings_chart {
     float: right;
     height: 192px;
     width: 68%;
@@ -136,7 +139,7 @@ td a:hover {
     width: 260px;
 }
 
-#matrix {
+#chart {
     clear: left;
     padding-top: 1px;
 }
@@ -150,5 +153,4 @@ td a:hover {
     background-position: 50% 50%;
     background-repeat: no-repeat;
     background-size: 50%;
-
 }

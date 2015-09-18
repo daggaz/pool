@@ -19,17 +19,28 @@
         var data = new google.visualization.DataTable();
         data.addColumn('datetime', 'Time');
         data.addColumn('number', 'Rating');
+        data.addColumn({id:'i1', type:'number', role:'interval'});
+        data.addColumn({id:'i0', type:'number', role:'interval'});
         data.addColumn({type: 'string', role: 'tooltip'});
         data.addRows([
             {% for ranking in player.rankings.all %}
                 {%  with ranking.game.created as date %}
+                    {% if forloop.first %}
+                        [
+                            new Date({{ date.year }}, {{ date.month }}-1, {{ date.day }}, {{ date.hour }}-1, {{ date.minute }}, {{ date.second }}),
+                            25, 25 - 8.333, 25 + 8.333,
+                            "{{ player.name }} 25 \u00B1 8.3 - Initial value"
+                        ],
+                    {% endif %}
                     [
                         new Date({{ date.year }}, {{ date.month }}-1, {{ date.day }}, {{ date.hour }}, {{ date.minute }}, {{ date.second }}),
                         {{ ranking.mu }},
+                        {{ ranking.mu }} - {{ ranking.sigma }},
+                        {{ ranking.mu }} + {{ ranking.sigma }},
                         {% if player == ranking.game.winner %}
-                            "Won against {{ ranking.game.loser.name }}"
+                            "{{ ranking.mu|floatformat }} \u00B1 {{ ranking.sigma|default:"8.333"|floatformat }} - won against {{ ranking.game.loser.name }}"
                         {% else %}
-                            "Lost against {{ ranking.game.winner.name }}"
+                            "{{ ranking.mu }} \u00B1 {{ ranking.sigma|default:"8.333"|floatformat }} - lost against {{ ranking.game.winner.name }}"
                         {% endif %}
                     ],
                 {% endwith %}
@@ -37,8 +48,13 @@
         ]);
 
         // Set chart options
-        var options = {'title':'Rating',
-                       'height':document.getElementById('player_details').clientHeight};
+        var options = {
+            backgroundColor: 'transparent',
+            curveType:'function',
+            'title':'Rating',
+            'intervals': { 'style':'area' },
+            'height':document.getElementById('player_details').clientHeight
+        };
 
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.LineChart(document.getElementById('rankings_chart'));
@@ -77,7 +93,7 @@
             </tr>
         </table>
 
-        <div id="rankings_chart"></div>
+        <div id="rankings_chart" class="chart"></div>
     </div>
 
     <div id="games">
