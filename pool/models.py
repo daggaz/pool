@@ -53,7 +53,7 @@ class Player(models.Model):
     @property
     def ranking(self):
         if self.mu:
-            return Player.objects.filter(mu__gt=self.mu).count() + 1
+            return Player.objects.filter(pessimistic_mu__gt=self.pessimistic_mu).count() + 1
         return Player.objects.count()
 
     @property
