@@ -40,9 +40,9 @@
                         {{ ranking.mu }} - ({{ ranking.sigma }}*3),
                         {{ ranking.mu }},
                         {% if player == ranking.game.winner %}
-                            "{{ ranking.mu|floatformat }} (min. " + ({{ ranking.mu }} - ({{ ranking.sigma }}*3)).toFixed(1) + " - won against {{ ranking.game.loser.name }}"
+                            "{{ ranking.mu|floatformat }} (min. " + ({{ ranking.mu }} - ({{ ranking.sigma }}*3)).toFixed(1) + ") - won against {{ ranking.game.loser.name }}"
                         {% else %}
-                            "{{ ranking.mu|floatformat }} (min. " + ({{ ranking.mu }} - ({{ ranking.sigma }}*3)).toFixed(1) + " - lost against {{ ranking.game.winner.name }}"
+                            "{{ ranking.mu|floatformat }} (min. " + ({{ ranking.mu }} - ({{ ranking.sigma }}*3)).toFixed(1) + ") - lost against {{ ranking.game.winner.name }}"
                         {% endif %}
                     ],
                 {% endwith %}
