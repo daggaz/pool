@@ -37,8 +37,8 @@
                     [
                         new Date({{ date.year }}, {{ date.month }}-1, {{ date.day }}, {{ date.hour }}, {{ date.minute }}, {{ date.second }}),
                         {{ ranking.mu }},
-                        {{ ranking.mu }} - {{ ranking.sigma }},
-                        {{ ranking.mu }} + {{ ranking.sigma }},
+                        {{ ranking.mu }} - ({{ ranking.sigma }}*3),
+                        {{ ranking.mu }},
                         {% if player == ranking.game.winner %}
                             "{{ ranking.mu|floatformat }} \u00B1 {{ ranking.sigma|default:"8.333"|floatformat }} - won against {{ ranking.game.loser.name }}"
                         {% else %}
@@ -72,6 +72,10 @@
             <tr>
                 <th>#</th>
                 <td>{{ player.ranking }}</td>
+            </tr>
+            <tr>
+                <th>Min. Rating</th>
+                <td>{{ player.pessimistic_mu|floatformat }}</td>
             </tr>
             <tr>
                 <th>Rating</th>
@@ -144,6 +148,15 @@
             </thead>
             <tbody>
                 {% for other in others %}
+                    {%  if forloop.counter == player.ranking %}
+                        <tr>
+                            <td>{{ player.name }}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {% endif %}
                     <tr>
                         <td><a href="{% url "player" other.pk %}">{{ other.name }}</a></td>
                         <td>{{ other.games_played }}</td>

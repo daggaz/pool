@@ -1,5 +1,5 @@
 from django.db import models, transaction
-from django.db.models import Count
+from django.db.models import Count, F
 from django.db.models.expressions import RawSQL
 from trueskill import Rating, rate_1vs1
 
@@ -8,8 +8,9 @@ class PlayerManager(models.Manager):
     def get_queryset(self):
         query = super(PlayerManager, self).get_queryset()
         return query.annotate(
-            games_played=Count('games_won', distinct=True) + Count('games_lost', distinct=True)
-        ).order_by('-mu', '-games_played')
+            games_played=Count('games_won', distinct=True) + Count('games_lost', distinct=True),
+            pessimistic_mu=F('mu')-(F('sigma')*3),
+        ).order_by('-pessimistic_mu', '-games_played')
 
     def annotate_against(self, other):
         return self.annotate(
