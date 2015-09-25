@@ -126,12 +126,12 @@ td a:hover {
 
 #player #rankings_chart {
     float: right;
-    height: 192px;
+    height: 223px;
     width: 68%;
 }
 
 #player table th {
-    width: 35%;
+    width: 45%;
 }
 
 #side_bar {

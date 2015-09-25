@@ -31,13 +31,13 @@
                             {% if forloop.first %}
                                 [
                                     new Date({{ date.year }}, {{ date.month }}-1, {{ date.day }}, {{ date.hour }}-1, {{ date.minute }}, {{ date.second }}),
-                                    25, 25 - 8.333, 25 + 8.333,
-                                    "{{ player.name }} 25 \u00B1 8.3 - Initial value"
+                                    0, 25 - 8.333, 25 + 8.333,
+                                    "{{ player.name }} 0 \u00B1 8.3 - Initial value"
                                 ],
                             {% endif %}
                             [
                                 new Date({{ date.year }}, {{ date.month }}-1, {{ date.day }}, {{ date.hour }}, {{ date.minute }}, {{ date.second }}),
-                                {{ ranking.mu }},
+                                {{ ranking.mu }} - ({{ ranking.sigma }}*3),
                                 {{ ranking.mu }} - {{ ranking.sigma }},
                                 {{ ranking.mu }} + {{ ranking.sigma }},
                                 {% if player == ranking.game.winner %}
@@ -50,7 +50,7 @@
                     {%  endfor %}
                     [
                         new Date(),
-                        {{ player.mu|default:"0" }},
+                        {{ player.mu|default:"0" }} - ({{ player.sigma }}*3),
                         {{ player.mu|default:"0" }} - {{ player.sigma|default:"8.333" }},
                         {{ player.mu|default:"0" }} + {{ player.sigma|default:"8.333" }},
                         "{{ player.mu|default:"0"|floatformat }} \u00B1 {{ player.sigma|default:"8.333"|floatformat }} - Current ranking"
@@ -97,9 +97,6 @@
                         width: '80%',
                         height: '80%'
                     },
-                    vAxis: {
-                        baseline: 25,
-                    },
                     hAxis: {
                         title: 'Date'
                     },
@@ -122,6 +119,7 @@
                 <tr>
                     <th>#</th>
                     <th>Name</th>
+                    <th>Min. Rating</th>
                     <th>Rating</th>
                     <th>Sigma</th>
                     <th>Won</th>
@@ -135,6 +133,7 @@
                     <tr>
                         <td>{{  forloop.counter }}</td>
                         <td><a href="{% url "player" player.id %}">{{ player.name }}</a></td>
+                        <td>{{ player.pessimistic_mu|floatformat }}</td>
                         <td>{{ player.mu|floatformat }}</td>
                         <td>{{ player.sigma|floatformat }}</td>
                         <td>{{ player.games_won.count }}</td>
