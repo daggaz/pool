@@ -1,5 +1,4 @@
 from django.core.management.base import BaseCommand
-from trueskill import Rating
 
 from pool.models import Player, Game, Ranking
 

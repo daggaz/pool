@@ -1,5 +1,7 @@
 {% extends "pool/base.html" %}
 
+{% load quality %}
+
 {% block extra_head %}
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
@@ -129,7 +131,7 @@
     </div>
 
     <div id="matches">
-        <h2>Matches</h2>
+        <h2>Head to head</h2>
         <table>
             <thead>
                 <tr>
@@ -137,6 +139,7 @@
                     <th>Games</th>
                     <th>Wins</th>
                     <th>Losses</th>
+                    <th>&#x2119;(<em>draw</em>)</th>
                 </tr>
             </thead>
             <tbody>
@@ -146,6 +149,7 @@
                         <td>{{ other.games_played }}</td>
                         <td>{{ other.games_lost_against }}</td>
                         <td>{{ other.games_won_against }}</td>
+                        <td>{% quality other player %}%</td>
                     </tr>
                 {% endfor %}
             </tbody>

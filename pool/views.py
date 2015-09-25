@@ -1,6 +1,5 @@
-from django.db.models.expressions import RawSQL
 from django.http import HttpResponseRedirect
-from django.db.models import Q, Count
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from pool.forms import PlayerForm, GameForm
 from pool.models import Game, Player
