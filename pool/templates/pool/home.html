@@ -32,7 +32,7 @@
                                 [
                                     new Date({{ date.year }}, {{ date.month }}-1, {{ date.day }}, {{ date.hour }}-1, {{ date.minute }}, {{ date.second }}),
                                     0, 25 - 8.333, 25 + 8.333,
-                                    "{{ player.name }} 0 \u00B1 8.3 - Initial value"
+                                    "{{ player.name }} 0 - Initial value"
                                 ],
                             {% endif %}
                             [
@@ -41,9 +41,9 @@
                                 {{ ranking.mu }} - {{ ranking.sigma }},
                                 {{ ranking.mu }} + {{ ranking.sigma }},
                                 {% if player == ranking.game.winner %}
-                                    "{{ player.name }} {{ ranking.mu|floatformat }} \u00B1 {{ ranking.sigma|default:"8.333"|floatformat }} - won against {{ ranking.game.loser.name }}"
+                                    "{{ player.name }} " + ({{ ranking.mu }} - ({{ ranking.sigma }}*3)).toFixed(1) + " - won against {{ ranking.game.loser.name }}"
                                 {% else %}
-                                    "{{ player.name }} {{ ranking.mu|floatformat }} \u00B1 {{ ranking.sigma|default:"8.333"|floatformat }} - lost against {{ ranking.game.winner.name }}"
+                                    "{{ player.name }} " + ({{ ranking.mu }} - ({{ ranking.sigma }}*3)).toFixed(1) + " - lost against {{ ranking.game.winner.name }}"
                                 {% endif %}
                             ],
                         {% endwith %}
@@ -53,7 +53,7 @@
                         {{ player.mu|default:"0" }} - ({{ player.sigma }}*3),
                         {{ player.mu|default:"0" }} - {{ player.sigma|default:"8.333" }},
                         {{ player.mu|default:"0" }} + {{ player.sigma|default:"8.333" }},
-                        "{{ player.mu|default:"0"|floatformat }} \u00B1 {{ player.sigma|default:"8.333"|floatformat }} - Current ranking"
+                        ({{ player.mu }} - ({{ player.sigma }}*3)).toFixed(1) + " - Current ranking"
                     ]
                 ]);
                 {% if forloop.first %}
