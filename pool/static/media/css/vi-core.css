@@ -115,6 +115,20 @@ td a:hover {
     margin-top: 1em;
 }
 
+td.trend {
+    padding-left: 1.5em;
+    background-size: 1em 1em;
+    background-repeat: no-repeat;
+    background-position: 0 40%;
+}
+
+td.up {
+    background-image: url("/static/media/img/up_green_arrow.png");
+}
+td.down {
+    background-image: url("/static/media/img/down_red_arrow.png");
+}
+
 #player_details {
     float: left;
     width: 30%;

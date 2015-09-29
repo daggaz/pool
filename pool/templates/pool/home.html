@@ -37,23 +37,23 @@
                             {% endif %}
                             [
                                 new Date({{ date.year }}, {{ date.month }}-1, {{ date.day }}, {{ date.hour }}, {{ date.minute }}, {{ date.second }}),
-                                {{ ranking.mu }} - ({{ ranking.sigma }}*3),
+                                {{ ranking.pessimistic_mu }},
                                 {{ ranking.mu }} - {{ ranking.sigma }},
                                 {{ ranking.mu }} + {{ ranking.sigma }},
                                 {% if player == ranking.game.winner %}
-                                    "{{ player.name }} " + ({{ ranking.mu }} - ({{ ranking.sigma }}*3)).toFixed(1) + " - won against {{ ranking.game.loser.name }}"
+                                    "{{ player.name }} " + ({{ ranking.pessimistic_mu }}).toFixed(1) + " - won against {{ ranking.game.loser.name }}"
                                 {% else %}
-                                    "{{ player.name }} " + ({{ ranking.mu }} - ({{ ranking.sigma }}*3)).toFixed(1) + " - lost against {{ ranking.game.winner.name }}"
+                                    "{{ player.name }} " + ({{ ranking.pessimistic_mu }}).toFixed(1) + " - lost against {{ ranking.game.winner.name }}"
                                 {% endif %}
                             ],
                         {% endwith %}
                     {%  endfor %}
                     [
                         new Date(),
-                        {{ player.mu|default:"0" }} - ({{ player.sigma }}*3),
+                        {{ player.pessimistic_mu|default:"0" }},
                         {{ player.mu|default:"0" }} - {{ player.sigma|default:"8.333" }},
                         {{ player.mu|default:"0" }} + {{ player.sigma|default:"8.333" }},
-                        ({{ player.mu }} - ({{ player.sigma }}*3)).toFixed(1) + " - Current ranking"
+                        ({{ player.pessimistic_mu|default:"0" }}).toFixed(1) + " - Current ranking"
                     ]
                 ]);
                 {% if forloop.first %}
@@ -133,7 +133,7 @@
                     <tr>
                         <td>{{  forloop.counter }}</td>
                         <td><a href="{% url "player" player.id %}">{{ player.name }}</a></td>
-                        <td>{{ player.pessimistic_mu|floatformat }}</td>
+                        <td class="trend {{ player.pessimistic_mu_trend }}">{{ player.pessimistic_mu|floatformat }}</td>
                         <td>{{ player.mu|floatformat }}</td>
                         <td>{{ player.sigma|floatformat }}</td>
                         <td>{{ player.games_won.count }}</td>

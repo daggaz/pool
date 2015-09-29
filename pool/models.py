@@ -65,6 +65,17 @@ class Player(models.Model):
         self.mu = rating.mu
         self.sigma = rating.sigma
 
+    @property
+    def pessimistic_mu_trend(self):
+        rankings = list(self.rankings.order_by('-game__created')[:2])
+        if len(rankings) == 2:
+            delta = rankings[0].pessimistic_mu - rankings[1].pessimistic_mu
+            if delta > 0:
+                return "up"
+            if delta < 0:
+                return "down"
+        return ""
+
     def __str__(self):
         return self.name
 
@@ -98,11 +109,19 @@ class Game(models.Model):
         ordering = ('created',)
 
 
+class RankingManager(models.Manager):
+    def get_queryset(self):
+        query = super(RankingManager, self).get_queryset()
+        return query.annotate(pessimistic_mu=F('mu')-(F('sigma')*3))
+
+
 class Ranking(models.Model):
     player = models.ForeignKey(Player, related_name='rankings')
     game = models.ForeignKey(Game, related_name='rankings')
     mu = models.FloatField(null=True)
     sigma = models.FloatField(null=True)
+
+    objects = RankingManager()
 
     @property
     def rating(self):
